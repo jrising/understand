@@ -1,4 +1,4 @@
-import sys, re
+import sys, re, os
 import Equation, parser, json
 from arpeggio.cleanpeg import ParserPEG
 
@@ -26,7 +26,7 @@ def json_parser(command, verbose=True):
     return tree
 
 def peg_parser(language, grammar, root):
-    with open(grammar, 'r') as fp:
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "grammars", grammar), 'r') as fp:
         parser = ParserPEG(fp.read(), root)
         def parse(command, verbose=True):
             parse_tree = parser.parse(command)
@@ -36,12 +36,12 @@ def peg_parser(language, grammar, root):
         return parse
 
 # In priority order
-interpreters = [{'calc4': peg_parser("4-Operator Calc.", "grammars/calc4.peg", 'calc')},
+interpreters = [{'calc4': peg_parser("4-Operator Calc.", "calc4.peg", 'calc')},
                 {'json': json_parser},
                 {'math': math_parser,
-                 'bash': peg_parser("Bash", "grammars/bash.peg", 'command'),
+                 'bash': peg_parser("Bash", "bash.peg", 'command'),
                  'python': python_parser},
-                {'csv': peg_parser("CSV", "grammars/csv.peg", 'csvfile')}]
+                {'csv': peg_parser("CSV", "csv.peg", 'csvfile')}]
 
 recognizeds = {'math': [r'sqrt\(', r'\^'],
                'python': [r'^def ', ':'],

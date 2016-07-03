@@ -17,5 +17,6 @@ class RawConditional(object):
         obj_property = is_obj.check(*args, **kw)
         is_obj.describe(obj_property)
 
+        env.set(cls, obj_property)
         return obj_property
 

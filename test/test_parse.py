@@ -1,5 +1,5 @@
 import unittest
-import interpret
+from parse import interpret
 
 class TestInterpret(unittest.TestCase):
     def test_simple(self):

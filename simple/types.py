@@ -38,24 +38,30 @@ class IsNumericalSequence(IsSequence):
                     self.env.set('intseq', map(int, xs.split(delimiter)))
                 except:
                     return float
-                    
+
                 self.env.trigger('intseq', self.env.get('intseq'))
 
                 return int
 
-        if not super(IsNumericalSequence, self).check(confidence, xs):
+        if not super(IsNumericalSequence, self).check(xs, confidence=confidence):
             return False
 
-        if np.all([isinstance(x, int) for x in np.random.choice(xs, np.ceil(len(xs) * confidence), replace=False)]):
-            self.env.set('numseq', xs)
-            self.env.set('intseq', xs)
+        try:
+            if np.all([isinstance(x, int) for x in np.random.choice(xs, int(np.ceil(len(xs) * confidence)), replace=False)]):
+                self.env.set('numseq', xs)
+                self.env.set('intseq', xs)
 
-            self.env.trigger('intseq', xs)
-            return int
+                self.env.trigger('intseq', xs)
+                return int
+        except:
+            pass
 
-        if np.all([isinstance(x, int) or isinstance(x, float) for x in np.random.choice(xs, np.ceil(len(xs) * confidence), replace=False)]):
-            self.env.set('numseq', xs)
-            return float
+        try:
+            if np.all([isinstance(x, int) or isinstance(x, float) for x in np.random.choice(xs, np.ceil(len(xs) * confidence), replace=False)]):
+                self.env.set('numseq', xs)
+                return float
+        except:
+            pass
 
         return False
 
